@@ -38,11 +38,10 @@
 Drag your mouse to rotate the view. Scroll to zoom in/out.
 </div>
 
-<script type="module">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/controls/OrbitControls.js"></script>
 
-import * as THREE from "https://unpkg.com/three@0.158.0/build/three.module.js";
-import { OrbitControls } from "https://unpkg.com/three@0.158.0/examples/jsm/controls/OrbitControls.js";
-
+<script>
 let scene = new THREE.Scene();
 scene.background = new THREE.Color(0xaee1ff);
 
@@ -61,7 +60,7 @@ scene.add(light);
 let ambient = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambient);
 
-// Cute Colors
+// Create colorful material
 function createMaterial(color){
   return new THREE.MeshStandardMaterial({
     color: color,
@@ -70,7 +69,7 @@ function createMaterial(color){
   });
 }
 
-// Shapes
+// Solid Figures
 let cube = new THREE.Mesh(new THREE.BoxGeometry(2,2,2), createMaterial(0xff6f61));
 cube.position.set(-6,2,0);
 scene.add(cube);
@@ -95,8 +94,8 @@ let pyramid = new THREE.Mesh(new THREE.ConeGeometry(1.5,3,4), createMaterial(0xf
 pyramid.position.set(3,-3,0);
 scene.add(pyramid);
 
-// Controls
-let controls = new OrbitControls(camera, renderer.domElement);
+// OrbitControls
+let controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.enablePan = false;
 
@@ -108,6 +107,13 @@ function animate() {
 }
 
 animate();
+
+// Resize
+window.addEventListener('resize', function(){
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
 </script>
 
