@@ -35,71 +35,72 @@
 
 <div id="title">🌟 Explore 3D Solid Figures 🌟</div>
 <div id="instructions">
-Drag each shape to rotate it. Count the faces, edges, and vertices!
+Drag your mouse to rotate the view. Scroll to zoom in/out.
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+<script type="module">
 
-<script>
+import * as THREE from "https://unpkg.com/three@0.158.0/build/three.module.js";
+import { OrbitControls } from "https://unpkg.com/three@0.158.0/examples/jsm/controls/OrbitControls.js";
 
 let scene = new THREE.Scene();
+scene.background = new THREE.Color(0xaee1ff);
+
 let camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+camera.position.set(0, 5, 18);
+
 let renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-camera.position.set(0, 5, 15);
-
+// Lights
 let light = new THREE.DirectionalLight(0xffffff, 1);
-light.position.set(5, 10, 7);
+light.position.set(5,10,7);
 scene.add(light);
 
 let ambient = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambient);
 
-// Materials (Cute Colors)
-let materials = [
-  new THREE.MeshStandardMaterial({color: 0xff6f61}), // cube
-  new THREE.MeshStandardMaterial({color: 0xffc107}), // rectangular prism
-  new THREE.MeshStandardMaterial({color: 0x4caf50}), // sphere
-  new THREE.MeshStandardMaterial({color: 0x2196f3}), // cylinder
-  new THREE.MeshStandardMaterial({color: 0x9c27b0}), // cone
-  new THREE.MeshStandardMaterial({color: 0xff9800})  // pyramid
-];
+// Cute Colors
+function createMaterial(color){
+  return new THREE.MeshStandardMaterial({
+    color: color,
+    roughness: 0.4,
+    metalness: 0.1
+  });
+}
 
-// Create Shapes
-let cube = new THREE.Mesh(new THREE.BoxGeometry(2,2,2), materials[0]);
-cube.position.set(-6,0,0);
+// Shapes
+let cube = new THREE.Mesh(new THREE.BoxGeometry(2,2,2), createMaterial(0xff6f61));
+cube.position.set(-6,2,0);
 scene.add(cube);
 
-let rectangular = new THREE.Mesh(new THREE.BoxGeometry(3,2,1.5), materials[1]);
-rectangular.position.set(-2,0,0);
+let rectangular = new THREE.Mesh(new THREE.BoxGeometry(3,2,1.5), createMaterial(0xffc107));
+rectangular.position.set(-2,2,0);
 scene.add(rectangular);
 
-let sphere = new THREE.Mesh(new THREE.SphereGeometry(1.5,32,32), materials[2]);
-sphere.position.set(2,0,0);
+let sphere = new THREE.Mesh(new THREE.SphereGeometry(1.5,32,32), createMaterial(0x4caf50));
+sphere.position.set(2,2,0);
 scene.add(sphere);
 
-let cylinder = new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,3,32), materials[3]);
-cylinder.position.set(6,0,0);
+let cylinder = new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,3,32), createMaterial(0x2196f3));
+cylinder.position.set(6,2,0);
 scene.add(cylinder);
 
-let cone = new THREE.Mesh(new THREE.ConeGeometry(1.5,3,32), materials[4]);
-cone.position.set(-3,-4,0);
+let cone = new THREE.Mesh(new THREE.ConeGeometry(1.5,3,32), createMaterial(0x9c27b0));
+cone.position.set(-3,-3,0);
 scene.add(cone);
 
-let pyramid = new THREE.Mesh(new THREE.ConeGeometry(1.5,3,4), materials[5]);
-pyramid.position.set(3,-4,0);
+let pyramid = new THREE.Mesh(new THREE.ConeGeometry(1.5,3,4), createMaterial(0xff9800));
+pyramid.position.set(3,-3,0);
 scene.add(pyramid);
 
-// Orbit Controls (Students Rotate Manually)
-let controls = new THREE.OrbitControls(camera, renderer.domElement);
+// Controls
+let controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
-controls.dampingFactor = 0.05;
-controls.enableZoom = true;
 controls.enablePan = false;
 
+// Animate
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
